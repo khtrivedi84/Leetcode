@@ -82,5 +82,48 @@ class Solution:
         # Optimal - Binary Search
         n1 = len(nums1)
         n2 = len(nums2)
-
         
+        # Make sure binary search is performed on smaller array to handle edge cases and boundaries
+        if n1 > n2:
+            nums1, nums2 = nums2, nums1
+            n1, n2 = n2, n1
+        n = n1 + n2 
+        left_side_length = (n1 + n2 + 1) // 2
+        low = 0
+        high = n1
+        while low <= high:
+            nums1_mid = (low + high) // 2
+            nums2_mid = left_side_length - nums1_mid
+
+            left1 = float('-inf')
+            left2 = float('-inf')
+            right1 = float('inf')
+            right2 = float('inf')
+
+            # Update left1 and right1
+            if nums1_mid < n1:
+                right1 = nums1[nums1_mid]
+            if nums1_mid - 1 >= 0:
+                left1 = nums1[nums1_mid - 1]
+            
+            # Update left2 and right2
+            if nums2_mid < n2:
+                right2 = nums2[nums2_mid]
+            if nums2_mid - 1 >= 0:
+                left2 = nums2[nums2_mid - 1]
+            
+            # Binary search to find the answer or eliminate a half
+            if left1 <= right2 and left2 <= right1:
+                if n % 2 == 0:
+                    ele1 = max(left1, left2)
+                    ele2 = min(right1, right2)
+                    ans = (ele1 + ele2) / 2
+                    return ans
+                else:
+                    return max(left1, left2)
+
+            if left1 > right2:
+                high = nums1_mid - 1
+            elif left2 > right1:
+                low = nums1_mid + 1
+        return 0.0
